@@ -26,6 +26,31 @@ section{padding:80px 0}
 .btn.ghost{background:transparent;color:var(--gold2);border:2px solid var(--gold)}
 .btn.sm{padding:10px 22px;font-size:16px;min-height:44px}
 .btn.block{width:100%}
+.btn.btn-discount{background:linear-gradient(135deg,#c0392b,#d35400);color:#fff;border:1px solid rgba(255,255,255,.25);box-shadow:0 4px 18px rgba(192,57,43,.45)}
+.btn.btn-discount:hover,.btn.btn-discount:focus-visible{transform:translateY(-2px);box-shadow:0 8px 26px rgba(192,57,43,.65)}
+.old-price{color:var(--beige);text-decoration:line-through;font-size:18px;font-weight:400;margin-right:8px;opacity:.75}
+.new-price{color:var(--gold2);font-weight:700}
+.badge-disc{display:inline-block;background:#c0392b;color:#fff;font-size:13px;font-weight:600;padding:2px 8px;border-radius:12px;margin-left:6px;vertical-align:middle}
+.tbl-old{display:block;font-size:12px;color:var(--beige);text-decoration:line-through;opacity:.75;font-weight:400;line-height:1.1}
+.tbl-new{color:var(--gold2);font-weight:600}
+.tbl-badge{display:inline-block;background:rgba(192,57,43,.3);color:#ff9d8a;border:1px solid rgba(192,57,43,.5);font-size:11px;padding:1px 5px;border-radius:6px;margin-left:4px}
+.price-toggle-bar{display:flex;justify-content:center;margin:-10px auto 35px}
+.toggle-pills{background:var(--card);border:1px solid var(--line);padding:6px;border-radius:50px;display:inline-flex;gap:6px}
+.pill-btn{background:transparent;border:0;color:var(--cream);font:500 15px Montserrat,Arial,sans-serif;padding:10px 22px;border-radius:40px;cursor:pointer;transition:all .2s}
+.pill-btn:hover{color:var(--gold2)}
+.pill-btn.active{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#2a170c;font-weight:600;box-shadow:0 4px 14px rgba(212,175,106,.3)}
+.pill-btn.discount-active.active{background:linear-gradient(135deg,#c0392b,#d35400);color:#fff;box-shadow:0 4px 14px rgba(192,57,43,.45)}
+.discount-banner{max-width:820px;margin:0 auto 30px;background:linear-gradient(135deg,rgba(192,57,43,.18),rgba(212,175,106,.12));border:1px solid rgba(212,175,106,.4);border-radius:18px;padding:18px 24px;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:fadeIn .3s ease}
+.disc-banner-inner{display:flex;align-items:center;gap:16px}
+.disc-icon{font-size:32px;flex:none}
+.disc-banner-inner strong{display:block;font-size:18px;color:var(--gold2);margin-bottom:4px}
+.disc-banner-inner p{margin:0;color:var(--cream);font-size:15px;line-height:1.4}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:480px){
+ .toggle-pills{width:100%;justify-content:center}
+ .pill-btn{padding:9px 12px;font-size:13px;flex:1;text-align:center}
+ .disc-banner-inner{flex-direction:column;text-align:center;gap:10px}
+}
 /* header */
 header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(27,17,12,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
 .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
@@ -116,7 +141,8 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
   <a href="#top" class="logo">SUN <span>DEW</span></a>
   <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">☰</button>
   <nav><ul id="menu">
-   <li><a href="#services">Услуги</a></li>
+   <li><a href="#services" id="menuServices">Услуги</a></li>
+   <li><a href="#discounts" id="menuDiscount" style="color:var(--gold2);font-weight:600">Скидки 15%</a></li>
    <li><a href="#subs">Абонементы</a></li>
    <li><a href="#gallery">Галерея</a></li>
    <li><a href="#contacts">Контакты</a></li>
@@ -133,7 +159,8 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
   <p>Пространство тишины и заботы: хаммам, SPA для двоих, обёртывания и ритуалы для тела и головы. Подарите себе время для отдыха.</p>
   <div class="row">
    <a href="#booking" class="btn">Записаться онлайн</a>
-   <a href="#services" class="btn ghost">Смотреть услуги</a>
+   <a href="#discounts" class="btn btn-discount" id="heroDiscountBtn">Скидки 15%</a>
+   <a href="#services" class="btn ghost" id="heroServicesBtn">Смотреть услуги</a>
   </div>
   <div class="facts">
    <div><b>5.0 ★</b>рейтинг в 2ГИС</div>
@@ -145,7 +172,22 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
 
 <section id="services">
  <div class="wrap">
-  <div class="sec-title"><h2>Наши услуги</h2><p>Выберите программу и нажмите «Выбрать» — мы подставим её в форму записи.</p></div>
+  <div class="sec-title"><h2 id="servicesTitle">Наши услуги</h2><p id="servicesDesc">Выберите программу и нажмите «Выбрать» — мы подставим её в форму записи.</p></div>
+  <div class="discount-banner" id="discountBanner" style="display:none">
+   <div class="disc-banner-inner">
+    <span class="disc-icon">🔥</span>
+    <div>
+     <strong>Специальное предложение: скидка 15% активирована!</strong>
+     <p>Цены на все программы, массажи и дополнительные процедуры снижены на 15%.</p>
+    </div>
+   </div>
+  </div>
+  <div class="price-toggle-bar">
+   <div class="toggle-pills">
+    <button type="button" class="pill-btn active" id="pillAll">Все услуги (обычные цены)</button>
+    <button type="button" class="pill-btn" id="pillDiscount">Скидки 15% 🔥</button>
+   </div>
+  </div>
   <div class="grid" id="servicesGrid"></div>
   <h3 class="sub-h">Массажи</h3><div class="tblwrap" id="massageTable"></div>
   <h3 class="sub-h">Дополнительные процедуры по уходу за лицом и телом</h3><div class="tblwrap" id="extras"></div>
@@ -292,42 +334,188 @@ function ph(img,label,cls){
 }
 if(CONFIG.heroImage)$("#hero").style.setProperty("--hero-img","url('"+CONFIG.heroImage+"')");
 
-/* services */
+/* services, discounts & subscriptions */
 var sel=$("#service");
-sel.innerHTML='<option value="">— Выберите услугу —</option>';
-CONFIG.services.forEach(function(s){
-  var c=document.createElement("article");c.className="card";
-  c.appendChild(ph(s.img,s.name));
-  var b=document.createElement("div");b.className="body";
-  b.innerHTML="<h3></h3><p></p><div class='meta'><span class='price'></span><span class='dur'></span></div>";
-  b.querySelector("h3").textContent=s.name;b.querySelector("p").textContent=s.desc;
-  b.querySelector(".price").textContent=s.price;b.querySelector(".dur").textContent=s.dur;
-  var btn=document.createElement("a");btn.href="#booking";btn.className="btn sm";btn.textContent="Выбрать";
-  btn.onclick=function(){sel.value=s.name};
-  b.appendChild(btn);c.appendChild(b);$("#servicesGrid").appendChild(c);
-  var o=document.createElement("option");o.value=o.textContent=s.name;sel.appendChild(o);
-});
+var isDiscount = false;
+var fm = function(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " "); };
+
+function calcDisc(priceStr) {
+  var num = parseInt(String(priceStr).replace(/\D/g, ""), 10);
+  if (isNaN(num)) return priceStr;
+  var d = Math.round(num * 0.85);
+  return fm(d) + " ₸";
+}
+
+function renderServices() {
+  var grid = $("#servicesGrid");
+  grid.innerHTML = "";
+  CONFIG.services.forEach(function(s){
+    var c = document.createElement("article");
+    c.className = "card";
+    c.appendChild(ph(s.img, s.name));
+    var b = document.createElement("div");
+    b.className = "body";
+    b.innerHTML = "<h3></h3><p></p><div class='meta'><span class='price'></span><span class='dur'></span></div>";
+    b.querySelector("h3").textContent = s.name;
+    b.querySelector("p").textContent = s.desc;
+    var priceEl = b.querySelector(".price");
+    if (isDiscount) {
+      var dPrice = calcDisc(s.price);
+      priceEl.innerHTML = "<span class='old-price'>" + s.price + "</span><span class='new-price'>" + dPrice + "</span><span class='badge-disc'>-15%</span>";
+    } else {
+      priceEl.textContent = s.price;
+    }
+    b.querySelector(".dur").textContent = s.dur;
+    var btn = document.createElement("a");
+    btn.href = "#booking";
+    btn.className = "btn sm";
+    btn.textContent = "Выбрать";
+    btn.onclick = function(){
+      var val = isDiscount ? s.name + " (со скидкой 15% — " + calcDisc(s.price) + ")" : s.name;
+      sel.value = val;
+    };
+    b.appendChild(btn);
+    c.appendChild(b);
+    grid.appendChild(c);
+  });
+}
+
+function renderMassages() {
+  var mt = "<table><thead><tr><th>Массаж</th><th>30 мин</th><th>60 мин</th><th>90 мин</th><th>120 мин</th></tr></thead><tbody>";
+  CONFIG.massages.forEach(function(m){
+    mt += "<tr><td>" + m[0] + "</td>" + m[1].map(function(v){
+      if (!v) return "<td>—</td>";
+      var orig = v * 1000;
+      if (isDiscount) {
+        var d = Math.round(orig * 0.85);
+        return "<td class='p'><span class='tbl-old'>" + fm(orig) + "</span><span class='tbl-new'>" + fm(d) + "</span><small class='tbl-badge'>-15%</small></td>";
+      } else {
+        return "<td class='p'>" + fm(orig) + "</td>";
+      }
+    }).join("") + "</tr>";
+  });
+  $("#massageTable").innerHTML = mt + "</tbody></table>";
+}
+
+function renderExtras() {
+  $("#extras").innerHTML = "<table style='min-width:0'><tbody>" + CONFIG.extras.map(function(x){
+    if (isDiscount) {
+      var d = Math.round(x[1] * 0.85);
+      return "<tr><td>" + x[0] + "</td><td class='p'><span class='tbl-old'>" + fm(x[1]) + " ₸</span><span class='tbl-new'>" + fm(d) + " ₸</span><small class='tbl-badge'>-15%</small></td></tr>";
+    } else {
+      return "<tr><td>" + x[0] + "</td><td class='p'>" + fm(x[1]) + " ₸</td></tr>";
+    }
+  }).join("") + "</tbody></table>";
+}
+
+function updateSelectOptions() {
+  sel.innerHTML = '<option value="">— Выберите услугу —</option>';
+  CONFIG.services.forEach(function(s){
+    var o = document.createElement("option");
+    if (isDiscount) {
+      var dPrice = calcDisc(s.price);
+      o.value = s.name + " (со скидкой 15% — " + dPrice + ")";
+      o.textContent = s.name + " — " + dPrice + " (-15%)";
+    } else {
+      o.value = o.textContent = s.name;
+    }
+    sel.appendChild(o);
+  });
+  CONFIG.subs.forEach(function(s){
+    var o = document.createElement("option");
+    o.value = o.textContent = "Абонемент «" + s.name + "» (" + s.count + ")";
+    sel.appendChild(o);
+  });
+  CONFIG.massages.forEach(function(m){
+    var o = document.createElement("option");
+    if (isDiscount) {
+      o.value = "Массаж: " + m[0] + " (со скидкой 15%)";
+      o.textContent = "Массаж: " + m[0] + " (-15%)";
+    } else {
+      o.value = o.textContent = "Массаж: " + m[0];
+    }
+    sel.appendChild(o);
+  });
+  CONFIG.extras.forEach(function(x){
+    var o = document.createElement("option");
+    if (isDiscount) {
+      var d = Math.round(x[1] * 0.85);
+      o.value = x[0] + " (со скидкой 15% — " + fm(d) + " ₸)";
+      o.textContent = x[0] + " — " + fm(d) + " ₸ (-15%)";
+    } else {
+      o.value = x[0] + " — " + fm(x[1]) + " ₸";
+      o.textContent = x[0] + " — " + fm(x[1]) + " ₸";
+    }
+    sel.appendChild(o);
+  });
+}
+
+function setDiscountMode(active) {
+  isDiscount = !!active;
+  var title = $("#servicesTitle");
+  var desc = $("#servicesDesc");
+  var banner = $("#discountBanner");
+  var pillAll = $("#pillAll");
+  var pillDisc = $("#pillDiscount");
+
+  if (isDiscount) {
+    if (title) title.textContent = "Наши услуги со скидкой 15%";
+    if (desc) desc.textContent = "Специальное предложение: цены на все программы и массажи снижены на 15%.";
+    if (banner) banner.style.display = "block";
+    if (pillDisc) pillDisc.classList.add("active", "discount-active");
+    if (pillAll) pillAll.classList.remove("active");
+  } else {
+    if (title) title.textContent = "Наши услуги";
+    if (desc) desc.textContent = "Выберите программу и нажмите «Выбрать» — мы подставим её в форму записи.";
+    if (banner) banner.style.display = "none";
+    if (pillAll) pillAll.classList.add("active");
+    if (pillDisc) pillDisc.classList.remove("active", "discount-active");
+  }
+  renderServices();
+  renderMassages();
+  renderExtras();
+  updateSelectOptions();
+}
+
+/* render subscriptions & gallery */
 CONFIG.subs.forEach(function(s){
-  var o=document.createElement("option");o.value=o.textContent="Абонемент «"+s.name+"» ("+s.count+")";sel.appendChild(o);
   var c=document.createElement("article");c.className="card sub"+(s.top?" top":"");
   c.innerHTML=(s.top?"<div class='badge'>★ Максимальная выгода</div>":"")+"<h3></h3><div class='dur'></div><div class='big'></div><div class='old'></div><div class='save'></div>";
   c.querySelector("h3").textContent=s.name;c.querySelector(".dur").textContent=s.count;
   c.querySelector(".big").textContent=s.price;c.querySelector(".old").textContent=s.old;c.querySelector(".save").textContent=s.save;
   var btn=document.createElement("a");btn.href="#booking";btn.className="btn block";btn.textContent="Оформить";
-  btn.onclick=function(){sel.value=o.value};
+  btn.onclick=function(){sel.value="Абонемент «"+s.name+"» ("+s.count+")"};
   c.appendChild(btn);$("#subsGrid").appendChild(c);
 });
 CONFIG.gallery.forEach(function(g,i){$("#galleryGrid").appendChild(ph(g,"Фото "+(i+1)))});
 
-/* massages & extras */
-var fm=function(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g," ")};
-var mt="<table><thead><tr><th>Массаж</th><th>30 мин</th><th>60 мин</th><th>90 мин</th><th>120 мин</th></tr></thead><tbody>";
-CONFIG.massages.forEach(function(m){
-  mt+="<tr><td>"+m[0]+"</td>"+m[1].map(function(v){return v?"<td class='p'>"+fm(v*1000)+"</td>":"<td>—</td>"}).join("")+"</tr>";
-  var o=document.createElement("option");o.value=o.textContent="Массаж: "+m[0];sel.appendChild(o);
-});
-$("#massageTable").innerHTML=mt+"</tbody></table>";
-$("#extras").innerHTML="<table style='min-width:0'><tbody>"+CONFIG.extras.map(function(x){return "<tr><td>"+x[0]+"</td><td class='p'>"+fm(x[1])+" ₸</td></tr>"}).join("")+"</tbody></table>";
+function scrollToServices(withDiscount) {
+  setDiscountMode(withDiscount);
+  document.getElementById("services").scrollIntoView({behavior: "smooth"});
+}
+
+var heroDisc = $("#heroDiscountBtn");
+if (heroDisc) heroDisc.addEventListener("click", function(e){ e.preventDefault(); scrollToServices(true); });
+
+var heroSvc = $("#heroServicesBtn");
+if (heroSvc) heroSvc.addEventListener("click", function(e){ e.preventDefault(); scrollToServices(false); });
+
+var menuDisc = $("#menuDiscount");
+if (menuDisc) menuDisc.addEventListener("click", function(e){ e.preventDefault(); scrollToServices(true); });
+
+var menuSvc = $("#menuServices");
+if (menuSvc) menuSvc.addEventListener("click", function(e){ e.preventDefault(); scrollToServices(false); });
+
+var pDisc = $("#pillDiscount");
+if (pDisc) pDisc.addEventListener("click", function(){ setDiscountMode(true); });
+
+var pAll = $("#pillAll");
+if (pAll) pAll.addEventListener("click", function(){ setDiscountMode(false); });
+
+setDiscountMode(false);
+if (window.location.hash === "#discounts") {
+  setDiscountMode(true);
+}
 
 /* menu */
 var menu=$("#menu"),burger=$("#burger");
