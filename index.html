@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sun Dew SPA — СПА-салон в Астане</title>
+<link rel="icon" type="image/png" href="images/emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600&display=swap">
 <style>
@@ -54,8 +55,12 @@ section{padding:80px 0}
 /* header */
 header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(27,17,12,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
 .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
-.logo{font:700 28px "Cormorant Garamond",Georgia,serif;color:var(--gold2);text-decoration:none;letter-spacing:1px}
+.logo{display:inline-flex;align-items:center;gap:10px;font:700 28px "Cormorant Garamond",Georgia,serif;color:var(--gold2);text-decoration:none;letter-spacing:1px}
 .logo span{color:var(--cream);font-weight:500}
+.nav-logo-icon{width:34px;height:34px;object-fit:contain}
+.hero-logo-box{margin-bottom:20px}
+.hero-logo-img{width:160px;max-width:80%;height:auto;filter:drop-shadow(0 6px 20px rgba(0,0,0,.6));display:block;margin:0 auto}
+.footer-logo{width:38px;height:38px;margin-bottom:12px;opacity:.9}
 nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0;align-items:center}
 nav a{text-decoration:none;font-size:16px;color:var(--cream)}
 nav a:hover{color:var(--gold)}
@@ -138,7 +143,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
 
 <header>
  <div class="wrap nav">
-  <a href="#top" class="logo">SUN <span>DEW</span></a>
+  <a href="#top" class="logo"><img src="images/emblem.png" alt="Sun Dew" class="nav-logo-icon">SUN <span>DEW</span></a>
   <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">☰</button>
   <nav><ul id="menu">
    <li><a href="#services" id="menuServices">Услуги</a></li>
@@ -154,6 +159,9 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
 <main id="top">
 <section class="hero" id="hero" style="background: linear-gradient(rgba(27, 17, 12, 0.65), rgba(27, 17, 12, 0.9)), url('images/8.jpg') center/cover no-repeat;">
  <div class="wrap">
+  <div class="hero-logo-box">
+   <img src="images/logo.png" alt="Sun Dew SPA Salon" class="hero-logo-img">
+  </div>
   <div class="tag">СПА-салон · Астана</div>
   <h1>Sun Dew SPA</h1>
   <p>Пространство тишины и заботы: хаммам, SPA для двоих, обёртывания и ритуалы для тела и головы. Подарите себе время для отдыха.</p>
@@ -177,8 +185,8 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
    <div class="disc-banner-inner">
     <span class="disc-icon">🔥</span>
     <div>
-     <strong>Специальное предложение: скидка 15% активирована!</strong>
-     <p>Цены на все программы, массажи и дополнительные процедуры снижены на 15%.</p>
+     <strong>Специальное предложение: скидка 15% на программы и массажи!</strong>
+     <p>Скидка 15% действует до конца ноября — только по будням с 10:00 до 16:00 (на спа-программы и массажи).</p>
     </div>
    </div>
   </div>
@@ -260,6 +268,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
 
 <footer>
  <div class="wrap">
+  <img src="images/emblem.png" alt="Sun Dew" class="footer-logo">
   <div>© <span id="yr"></span> Sun Dew SPA · Астана</div>
   <div style="font-size: 12px; opacity: 0.6; margin-top: 6px;">By Alisher Matenov</div>
  </div>
@@ -399,12 +408,7 @@ function renderMassages() {
 
 function renderExtras() {
   $("#extras").innerHTML = "<table style='min-width:0'><tbody>" + CONFIG.extras.map(function(x){
-    if (isDiscount) {
-      var d = Math.round(x[1] * 0.85);
-      return "<tr><td>" + x[0] + "</td><td class='p'><span class='tbl-old'>" + fm(x[1]) + " ₸</span><span class='tbl-new'>" + fm(d) + " ₸</span><small class='tbl-badge'>-15%</small></td></tr>";
-    } else {
-      return "<tr><td>" + x[0] + "</td><td class='p'>" + fm(x[1]) + " ₸</td></tr>";
-    }
+    return "<tr><td>" + x[0] + "</td><td class='p'>" + fm(x[1]) + " ₸</td></tr>";
   }).join("") + "</tbody></table>";
 }
 
@@ -438,14 +442,8 @@ function updateSelectOptions() {
   });
   CONFIG.extras.forEach(function(x){
     var o = document.createElement("option");
-    if (isDiscount) {
-      var d = Math.round(x[1] * 0.85);
-      o.value = x[0] + " (со скидкой 15% — " + fm(d) + " ₸)";
-      o.textContent = x[0] + " — " + fm(d) + " ₸ (-15%)";
-    } else {
-      o.value = x[0] + " — " + fm(x[1]) + " ₸";
-      o.textContent = x[0] + " — " + fm(x[1]) + " ₸";
-    }
+    o.value = x[0] + " — " + fm(x[1]) + " ₸";
+    o.textContent = x[0] + " — " + fm(x[1]) + " ₸";
     sel.appendChild(o);
   });
 }
@@ -459,8 +457,8 @@ function setDiscountMode(active) {
   var pillDisc = $("#pillDiscount");
 
   if (isDiscount) {
-    if (title) title.textContent = "Наши услуги со скидкой 15%";
-    if (desc) desc.textContent = "Специальное предложение: цены на все программы и массажи снижены на 15%.";
+    if (title) title.textContent = "Программы и массажи со скидкой 15%";
+    if (desc) desc.textContent = "Скидка 15% действует до конца ноября — только по будням с 10:00 до 16:00.";
     if (banner) banner.style.display = "block";
     if (pillDisc) pillDisc.classList.add("active", "discount-active");
     if (pillAll) pillAll.classList.remove("active");
