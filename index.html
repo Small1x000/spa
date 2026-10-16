@@ -129,8 +129,13 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .item b{display:block;color:var(--gold2)}
 .item a{text-decoration:none}.item a:hover{color:var(--gold)}
 .soc{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:6px}
-.btn-route{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#2a170c;font:600 17px Montserrat,Arial,sans-serif;padding:16px 30px;border-radius:50px;text-decoration:none;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 20px rgba(212,175,106,.35);border:0;cursor:pointer;margin-top:10px}
-.btn-route:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(212,175,106,.55)}
+.route-intrigue-card{background:linear-gradient(135deg,rgba(47,30,21,.9),rgba(37,23,16,.95));border:1px solid var(--gold);border-radius:20px;padding:22px 24px;margin-top:10px;box-shadow:0 8px 25px rgba(0,0,0,.4),inset 0 0 20px rgba(212,175,106,.08);position:relative;overflow:hidden}
+.route-intrigue-card::before{content:"";position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(212,175,106,.15),transparent 70%);pointer-events:none}
+.route-title{font-family:"Cormorant Garamond",Georgia,serif;font-size:24px;color:var(--gold2);margin:0 0 8px;line-height:1.25}
+.route-desc{color:var(--beige);font-size:15px;line-height:1.5;margin:0 0 18px}
+.btn-route{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#2a170c;padding:14px 20px;border-radius:14px;text-decoration:none;font-weight:700;font-size:16px;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 15px rgba(212,175,106,.35);border:0;cursor:pointer;text-align:center}
+.btn-route:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,175,106,.55)}
+.btn-route small{font-size:12px;font-weight:500;opacity:.8;margin-top:3px}
 #map{min-height:360px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(135deg,#3b271b,#2a1a12);display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;text-align:center;padding:24px;overflow:hidden}
 #map iframe{width:100%;height:100%;min-height:360px;border:0}
 footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:var(--beige);font-size:15px}
@@ -266,9 +271,12 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
      <a class="btn sm" href="https://instagram.com/sun_dew_spa" target="_blank" rel="noopener">Instagram</a>
      <a class="btn sm" id="waLink" href="https://wa.me/77780505767?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D0%BF%D0%BE%D0%B4%D1%80%D0%BE%D0%B1%D0%BD%D0%B5%D0%B5%20%D0%BE%D0%B1%20%D1%83%D1%81%D0%BB%D1%83%D0%B3%D0%B0%D1%85%20Sun%20Dew%20SPA." target="_blank" rel="noopener">WhatsApp</a>
     </div>
-    <div>
+    <div class="route-intrigue-card">
+     <h4 class="route-title">Маршрут к вашему оазису тишины</h4>
+     <p class="route-desc">Всего 10–15 минут от центра — и вы погружаетесь в тепло хаммама, чарующие ароматы масел и атмосферу абсолютного умиротворения. Позвольте себе заслуженный отдых.</p>
      <a class="btn-route" href="https://2gis.kz/astana/directions/points/%7C71.430524%2C51.08459%3B70000001056077202" target="_blank" rel="noopener">
-      🚗 Проложить путь к наслаждению в 2ГИС
+      <span>🚗 Проложить путь к наслаждению</span>
+      <small>Открыть маршрут в навигаторе 2ГИС →</small>
      </a>
     </div>
    </div>
