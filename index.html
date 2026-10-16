@@ -111,6 +111,14 @@ tr:last-child td{border:0}
 label{display:block;font-weight:500;margin:0 0 8px;color:var(--gold2)}
 input,select,textarea{width:100%;font:18px Montserrat,Arial,sans-serif;padding:15px 16px;border-radius:12px;border:2px solid var(--line);background:#20140d;color:var(--cream);margin-bottom:20px;min-height:56px}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+.phone-box{display:flex;align-items:center;background:#20140d;border:2px solid var(--line);border-radius:12px;margin-bottom:20px;min-height:56px;padding:0 16px;transition:border-color .2s,box-shadow .2s;position:relative}
+.phone-box:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,106,.2),0 6px 20px rgba(0,0,0,.3)}
+.phone-box.valid{border-color:rgba(212,175,106,.8)}
+.phone-flag{font-size:24px;margin-right:12px;user-select:none;display:flex;align-items:center;line-height:1}
+.phone-box input{flex:1;background:transparent!important;border:none!important;outline:none!important;padding:14px 0!important;margin-bottom:0!important;min-height:auto!important;font:600 19px Montserrat,Arial,sans-serif!important;color:var(--cream)!important;letter-spacing:.8px;font-variant-numeric:tabular-nums;box-shadow:none!important}
+.phone-box input::placeholder{color:rgba(245,230,211,.35);font-weight:400;letter-spacing:.5px}
+.phone-check{font-size:16px;color:#72cf6f;background:rgba(114,207,111,.15);border:1px solid rgba(114,207,111,.4);width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;opacity:0;transform:scale(.7);transition:opacity .2s,transform .2s;margin-left:8px;user-select:none;font-weight:700}
+.phone-box.valid .phone-check{opacity:1;transform:scale(1)}
 .err{color:#ff9d8a;font-size:15px;margin:-12px 0 16px;display:none}
 .hint{font-size:15px;color:var(--beige);text-align:center;margin:14px 0 0}
 /* contacts */
@@ -229,8 +237,12 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
     <input id="name" type="text" autocomplete="name" placeholder="Например, Айгерим">
     <div class="err" id="eName">Пожалуйста, введите имя</div>
     <label for="phone">Телефон</label>
-    <input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 7__ ___ __ __">
-    <div class="err" id="ePhone">Введите номер телефона (не менее 10 цифр)</div>
+    <div class="phone-box">
+     <span class="phone-flag" title="Казахстан (+7)">🇰🇿</span>
+     <input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (707) 000-00-00" maxlength="18">
+     <span class="phone-check" id="phoneCheck" title="Номер введён корректно">✓</span>
+    </div>
+    <div class="err" id="ePhone">Пожалуйста, введите корректный номер телефона (10 цифр)</div>
     <label for="service">Желаемая услуга</label>
     <select id="service"></select>
     <label for="when">Желаемые дата и время (необязательно)</label>
@@ -533,15 +545,106 @@ var menu=$("#menu"),burger=$("#burger");
 burger.onclick=function(){var o=menu.classList.toggle("open");burger.setAttribute("aria-expanded",o);burger.textContent=o?"✕":"☰"};
 menu.addEventListener("click",function(e){if(e.target.tagName==="A"){menu.classList.remove("open");burger.textContent="☰"}});
 
+/* phone input mask & validation */
+var phoneInput = $("#phone");
+var phoneBox = phoneInput ? phoneInput.closest(".phone-box") : null;
+
+function formatKzPhone(val) {
+  var digits = val.replace(/\D/g, "");
+  if (!digits) return "";
+  var nat = "";
+  if (digits.length >= 11 && (digits[0] === "7" || digits[0] === "8")) {
+    nat = digits.substring(1, 11);
+  } else if (val.startsWith("+7") && digits.length > 1 && digits[0] === "7") {
+    nat = digits.substring(1, 11);
+    if (nat && nat[0] === "8") nat = nat.substring(1);
+  } else if (val.startsWith("+7") && digits.length === 1 && digits[0] === "7") {
+    return "+7 (";
+  } else if (digits[0] === "8") {
+    nat = digits.substring(1, 11);
+  } else if (digits[0] === "7") {
+    nat = digits.substring(0, 10);
+  } else {
+    nat = digits.substring(0, 10);
+  }
+  var res = "+7";
+  if (nat.length > 0) res += " (" + nat.substring(0, 3);
+  if (nat.length >= 3) res += ") " + nat.substring(3, 6);
+  if (nat.length >= 6) res += "-" + nat.substring(6, 8);
+  if (nat.length >= 8) res += "-" + nat.substring(8, 10);
+  return res;
+}
+
+if (phoneInput) {
+  phoneInput.addEventListener("focus", function() {
+    if (!this.value.trim()) {
+      this.value = "+7 (";
+    }
+  });
+
+  phoneInput.addEventListener("blur", function() {
+    var digits = this.value.replace(/\D/g, "");
+    if (digits.length <= 1) {
+      this.value = "";
+      if (phoneBox) phoneBox.classList.remove("valid");
+    }
+  });
+
+  phoneInput.addEventListener("input", function() {
+    var formatted = formatKzPhone(this.value);
+    this.value = formatted;
+    var digits = formatted.replace(/\D/g, "");
+    var isValid = digits.length >= 11;
+    if (phoneBox) {
+      phoneBox.classList.toggle("valid", isValid);
+    }
+    var err = $("#ePhone");
+    if (err && isValid) err.style.display = "none";
+  });
+
+  phoneInput.addEventListener("keydown", function(e) {
+    if (e.key === "Backspace") {
+      var val = this.value;
+      if (val === "+7" || val === "+7 (" || val === "+7 ") {
+        e.preventDefault();
+        this.value = "";
+        if (phoneBox) phoneBox.classList.remove("valid");
+        return;
+      }
+      var pos = this.selectionStart;
+      if (pos === this.selectionEnd && pos === val.length) {
+        if (/\D$/.test(val)) {
+          e.preventDefault();
+          for (var i = val.length - 1; i >= 0; i--) {
+            if (/\d/.test(val[i])) {
+              if (i > 1) {
+                var sliced = val.substring(0, i);
+                this.value = formatKzPhone(sliced);
+              } else {
+                this.value = "";
+              }
+              break;
+            }
+          }
+          var digits = this.value.replace(/\D/g, "");
+          if (phoneBox) phoneBox.classList.toggle("valid", digits.length >= 11);
+        }
+      }
+    }
+  });
+}
+
 /* booking -> WhatsApp */
 $("#bookForm").addEventListener("submit",function(e){
   e.preventDefault();
   var name=$("#name").value.trim(),phone=$("#phone").value.trim(),svc=sel.value,when=$("#when").value.trim();
-  var okN=name.length>1,okP=phone.replace(/\D/g,"").length>=10;
+  var pDigits=phone.replace(/\D/g,"");
+  var okN=name.length>1,okP=pDigits.length>=11||(pDigits.length===10&&!phone.startsWith("+"));
   $("#eName").style.display=okN?"none":"block";$("#ePhone").style.display=okP?"none":"block";
   if(!okN){$("#name").focus();return}
   if(!okP){$("#phone").focus();return}
-  var t="Здравствуйте! Хочу записаться в Sun Dew SPA.\n\nИмя: "+name+"\nТелефон: "+phone+"\nУслуга: "+(svc||"нужна консультация")+(when?"\nЖелаемое время: "+when:"")+"\n\nПодскажите, пожалуйста, свободное время.";
+  var sendPhone=formatKzPhone(phone)||phone;
+  var t="Здравствуйте! Хочу записаться в Sun Dew SPA.\n\nИмя: "+name+"\nТелефон: "+sendPhone+"\nУслуга: "+(svc||"нужна консультация")+(when?"\nЖелаемое время: "+when:"")+"\n\nПодскажите, пожалуйста, свободное время.";
   window.location.href=waBase+"?text="+encodeURIComponent(t);
 });
 </script>
